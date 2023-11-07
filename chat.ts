@@ -45,6 +45,10 @@ async function* streamChat(prompt: string, prevConversation: Message[]): AsyncGe
   }
 }
 
+function printWithoutNewline(message: string) {
+  Deno.stdout.writeSync(new TextEncoder().encode(message));
+}
+
 async function main() {
   console.log("This is a simple GPT-powered chat interface.");
   console.log("Starting a chat with GPT. Type 'quit' to end the conversation.");
@@ -52,17 +56,18 @@ async function main() {
   const messageHistory: Message[] = [];
 
   while (true) {
-    const userPrompt = prompt("\n\nYou: ");
+    const userPrompt = prompt("\n\nYou:");
     if (userPrompt?.toLowerCase() === "quit") {
       console.log("Exiting the chat interface.");
       break;
     } else {
       let botMessage = "";
-      await Deno.stdout.write(new TextEncoder().encode("ChatGPT: "));
+      printWithoutNewline("\nChatGPT: ")
       for await (const msgChunk of streamChat(userPrompt!, messageHistory)) {
-        await Deno.stdout.write(new TextEncoder().encode(msgChunk));
+        printWithoutNewline(msgChunk)
         botMessage += msgChunk;
       }
+      printWithoutNewline("\n")
       messageHistory.push({ role: "user", content: userPrompt! });
       messageHistory.push({ role: "assistant", content: botMessage });
     }
