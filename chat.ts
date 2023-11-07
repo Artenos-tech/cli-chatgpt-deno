@@ -1,3 +1,5 @@
+#!/usr/bin/env -S deno run --allow-all
+
 import { OpenAI } from "https://deno.land/x/openai@v4.16.1/mod.ts";
 
 interface Message {
