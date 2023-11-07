@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-all
+#!/usr/bin/env -S deno run --allow-env --allow-net="api.openai.com"
 
 import { OpenAI } from "https://deno.land/x/openai@v4.16.1/mod.ts";
 
