@@ -51,19 +51,27 @@ function printWithoutNewline(message: string) {
 
 async function main() {
   console.log("This is a simple GPT-powered chat interface.");
-  console.log("Starting a chat with GPT. Type 'quit' to end the conversation.");
+  console.log("Starting a chat with GPT.");
+  console.log("Type 'quit' to end the conversation.")
+  console.log("You can also type 'restart' to start a new conversation.")
 
-  const messageHistory: Message[] = [];
+  let messageHistory: Message[] = [];
 
   while (true) {
     const userPrompt = prompt("\n\nYou:");
-    if (userPrompt?.toLowerCase() === "quit") {
+    if (!userPrompt) {
+      continue
+    } else if (userPrompt.toLowerCase() === "quit") {
       console.log("Exiting the chat interface.");
       break;
-    } else {
+    } else if (userPrompt.toLowerCase() === "restart") {
+      messageHistory = []
+      console.log("Restarting the conversation.");
+    }
+    else {
       let botMessage = "";
       printWithoutNewline("\nChatGPT: ")
-      for await (const msgChunk of streamChat(userPrompt!, messageHistory)) {
+      for await (const msgChunk of streamChat(userPrompt, messageHistory)) {
         printWithoutNewline(msgChunk)
         botMessage += msgChunk;
       }
